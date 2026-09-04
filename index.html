@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>取扱店舗検索</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .search-box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .search-group {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 200px;
+    }
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      font-size: 0.9em;
+    }
+    input, select {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    .result-count {
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: #555;
+    }
+    .store-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+    }
+    .store-card {
+      background: #fff;
+      padding: 15px;
+      border-radius: 6px;
+      border-left: 5px solid #3498db;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .category-badge {
+      display: inline-block;
+      background: #eef6fc;
+      color: #2980b9;
+      font-size: 0.8rem;
+      padding: 3px 8px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    .store-name {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin: 0 0 5px 0;
+    }
+    .store-kana {
+      font-size: 0.8rem;
+      color: #7f8c8d;
+      margin-bottom: 8px;
+    }
+    .store-address {
+      font-size: 0.9rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>取扱店舗検索</h1>
+
+  <!-- 検索フォーム -->
+  <div class="search-box">
+    <div class="search-group">
+      <label for="keyword">キーワード検索</label>
+      <input type="text" id="keyword" placeholder="店舗名・フリガナ・住所...">
+    </div>
+    <div class="search-group">
+      <label for="category-select">カテゴリ絞り込み</label>
+      <select id="category-select">
+        <option value="">すべてのカテゴリ</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 検索結果件数 -->
+  <div class="result-count" id="result-count">読み込み中...</div>
+
+  <!-- 店舗一覧表示エリア -->
+  <div class="store-list" id="store-list"></div>
+
+  <script>
+    let storesData = [];
+
+    // JSONデータの読み込み
+    async function loadStores() {
+      try {
+        const response = await fetch('data.json');
+        if (!response.ok) {
+          throw new Error('JSONファイルの読み込みに失敗しました');
+        }
+        storesData = await response.json();
+        
+        initCategoryFilter(storesData);
+        renderStores(storesData);
+      } catch (error) {
+        document.getElementById('result-count').textContent = 'データの読み込みに失敗しました。';
+        console.error(error);
+      }
+    }
+
+    // カテゴリ選択肢の自動生成
+    function initCategoryFilter(data) {
+      const categorySelect = document.getElementById('category-select');
+      const categories = [...new Set(data.map(item => item.category))];
+
+      categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = cat;
+        categorySelect.appendChild(option);
+      });
+    }
+
+    // 店舗カードの表示描画
+    function renderStores(data) {
+      const listContainer = document.getElementById('store-list');
+      const countContainer = document.getElementById('result-count');
+      
+      listContainer.innerHTML = '';
+      countContainer.textContent = `該当件数: ${data.length} 件`;
+
+      if (data.length === 0) {
+        listContainer.innerHTML = '<p>該当する店舗が見つかりませんでした。</p>';
+        return;
+      }
+
+      data.forEach(store => {
+        const card = document.createElement('div');
+        card.className = 'store-card';
+        card.innerHTML = `
+          <span class="category-badge">${escapeHtml(store.category)}</span>
+          <h2 class="store-name">${escapeHtml(store.name)}</h2>
+          <div class="store-kana">${escapeHtml(store.kana || '')}</div>
+          <div class="store-address">📍 ${escapeHtml(store.address)}</div>
+        `;
+        listContainer.appendChild(card);
+      });
+    }
+
+    // 検索・絞り込みフィルター処理
+    function filterStores() {
+      const keyword = document.getElementById('keyword').value.toLowerCase().trim();
+      const selectedCategory = document.getElementById('category-select').value;
+
+      const filtered = storesData.filter(store => {
+        // カテゴリ一致チェック
+        const matchesCategory = !selectedCategory || store.category === selectedCategory;
+
+        // キーワード一致チェック（店舗名・フリガナ・住所）
+        const matchesKeyword = !keyword || 
+          (store.name && store.name.toLowerCase().includes(keyword)) ||
+          (store.kana && store.kana.toLowerCase().includes(keyword)) ||
+          (store.address && store.address.toLowerCase().includes(keyword));
+
+        return matchesCategory && matchesKeyword;
+      });
+
+      renderStores(filtered);
+    }
+
+    // XSS対策（エスケープ処理）
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // イベントリスナー登録
+    document.getElementById('keyword').addEventListener('input', filterStores);
+    document.getElementById('category-select').addEventListener('change', filterStores);
+
+    // 初期実行
+    loadStores();
+  </script>
+</body>
+</html>
