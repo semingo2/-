@@ -3,15 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>取扱店舗ガイド | ARTISTIC FINDER ULTIMATE</title>
+  <title>取扱店舗ガイド | ARTISTIC FINDER ULTRA</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;600;800&display=swap" rel="stylesheet">
   
   <style>
-    /* ==========================================================================
-       1. 基本テーマ (ダーク / ライト)
-       ========================================================================== */
+    /* 1. 基本テーマ (ダーク / ライト) */
     [data-base-theme="dark"] {
       --bg-color: #0b0f19;
       --card-bg: rgba(255, 255, 255, 0.05);
@@ -34,9 +32,7 @@
       --blob-opacity: 0.25;
     }
 
-    /* ==========================================================================
-       2. 10色のカラーテーマバリエーション
-       ========================================================================== */
+    /* 2. 10色のカラーテーマ */
     [data-color-theme="aurora"] {
       --accent-grad: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
       --accent-glow: rgba(168, 85, 247, 0.4);
@@ -98,27 +94,43 @@
       --blob1: #9f1239; --blob2: #be123c; --blob3: #881337;
     }
 
-    /* ==========================================================================
-       3. 🌈 カラフル（キラキラ）モード アニメーション
-       ========================================================================== */
-    [data-colorful="true"] {
-      animation: rainbowHue 8s infinite linear;
+    /* 3. 💥 超派手キラキラ（ULTRA RAINBOW）モード */
+    [data-colorful="true"] body {
+      background: linear-gradient(-45deg, #ff0055, #7928ca, #00dfd8, #ff007f, #eab308, #10b981) !important;
+      background-size: 400% 400% !important;
+      animation: rainbowBg 4s ease infinite !important;
     }
-    [data-colorful="true"] .bg-blobs {
-      animation: rainbowHue 4s infinite linear alternate;
-    }
-    [data-colorful="true"] .store-card {
-      border-color: rgba(255, 255, 255, 0.3);
-      animation: rainbowHue 6s infinite linear;
-    }
-    @keyframes rainbowHue {
-      0% { filter: hue-rotate(0deg); }
-      100% { filter: hue-rotate(360deg); }
+    @keyframes rainbowBg {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
-    /* ==========================================================================
-       レイアウト & コンポーネント スタイル
-       ========================================================================== */
+    [data-colorful="true"] .store-card, 
+    [data-colorful="true"] .search-panel,
+    [data-colorful="true"] .top-controls {
+      border: 2px solid transparent !important;
+      background-image: linear-gradient(var(--card-bg), var(--card-bg)), linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bf7, #7a00ff, #ff00c8) !important;
+      background-origin: border-box !important;
+      background-clip: padding-box, border-box !important;
+      animation: pulseNeon 1.2s infinite alternate, rainbowRotate 3s linear infinite !important;
+      box-shadow: 0 0 30px rgba(255, 0, 255, 0.7), inset 0 0 15px rgba(0, 255, 255, 0.5) !important;
+    }
+
+    @keyframes pulseNeon {
+      0% { box-shadow: 0 0 20px #ff0055, 0 0 40px #facc15; }
+      100% { box-shadow: 0 0 40px #00ffd5, 0 0 60px #7928ca; transform: scale(1.02); }
+    }
+
+    [data-colorful="true"] h1, 
+    [data-colorful="true"] .title-tag {
+      animation: textStrobe 0.3s infinite alternate !important;
+    }
+    @keyframes textStrobe {
+      0% { text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0055; filter: hue-rotate(0deg); }
+      100% { text-shadow: 0 0 25px #00ffff, 0 0 50px #00ff00; filter: hue-rotate(360deg); }
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -146,23 +158,20 @@
 
     .container { max-width: 1000px; margin: 0 auto; position: relative; z-index: 1; }
 
-    /* --- トップ コントロールバー --- */
+    /* コントロールバー */
     .top-controls {
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 25px;
       background: var(--card-bg); padding: 12px 20px; border-radius: 50px; border: 1px solid var(--card-border); backdrop-filter: blur(15px);
     }
-    .base-theme-toggle, .colorful-toggle {
+    .base-theme-toggle, .colorful-toggle, .diag-reopen-btn {
       background: rgba(255, 255, 255, 0.1); border: 1px solid var(--card-border); color: var(--text-main);
       padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
     }
-    .base-theme-toggle:hover, .colorful-toggle:hover { transform: scale(1.05); }
+    .base-theme-toggle:hover, .colorful-toggle:hover, .diag-reopen-btn:hover { transform: scale(1.05); }
     .colorful-toggle.active { background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #8b00ff); color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
 
-    /* 10色カラーパレット */
     .color-palette { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-    .color-dot {
-      width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: transform 0.2s, border-color 0.2s;
-    }
+    .color-dot { width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: transform 0.2s; }
     .color-dot:hover { transform: scale(1.25); }
     .color-dot.active { border-color: var(--text-main); transform: scale(1.2); }
 
@@ -173,26 +182,10 @@
     }
     h1 { font-size: 2.5rem; font-weight: 800; line-height: 1.2; color: var(--text-main); margin-bottom: 15px; }
 
-    /* ❤️ お気に入りボタン */
-    .action-bar { display: flex; justify-content: center; margin-bottom: 20px; }
-    .btn-fav-filter {
-      background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-main);
-      font-weight: 600; padding: 12px 24px; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; backdrop-filter: blur(10px);
-    }
-    .btn-fav-filter.active { background: #ec4899; color: #fff; border-color: #ec4899; box-shadow: 0 0 20px rgba(236, 72, 153, 0.4); }
-
-    /* 🏷️ クイックタグ */
-    .quick-tags { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-    .tag-chip {
-      background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-muted);
-      padding: 6px 14px; border-radius: 15px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;
-    }
-    .tag-chip:hover { background: var(--accent-grad); color: #fff; }
-
     /* 検索パネル */
     .search-panel {
       background: var(--card-bg); backdrop-filter: blur(20px); border: 1px solid var(--card-border);
-      border-radius: 24px; padding: 22px; margin-bottom: 25px; display: flex; flex-wrap: wrap; gap: 15px;
+      border-radius: 24px; padding: 22px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 15px;
     }
     .input-group { flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 6px; }
     label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 600; }
@@ -201,6 +194,20 @@
       border-radius: 12px; padding: 12px 16px; color: var(--text-main); font-size: 0.95rem; outline: none; transition: all 0.3s;
     }
     input:focus, select:focus { border-color: var(--card-hover-border); box-shadow: 0 0 15px var(--accent-glow); }
+
+    .action-bar { display: flex; justify-content: center; margin-bottom: 20px; }
+    .btn-fav-filter {
+      background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-main);
+      font-weight: 600; padding: 12px 24px; border-radius: 50px; cursor: pointer; transition: all 0.3s ease;
+    }
+    .btn-fav-filter.active { background: #ec4899; color: #fff; border-color: #ec4899; box-shadow: 0 0 20px rgba(236, 72, 153, 0.4); }
+
+    .quick-tags { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .tag-chip {
+      background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-muted);
+      padding: 6px 14px; border-radius: 15px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;
+    }
+    .tag-chip:hover { background: var(--accent-grad); color: #fff; }
 
     .status-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 10px; }
     .result-count span { color: var(--text-main); font-weight: 800; font-size: 1.2rem; background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -217,14 +224,13 @@
 
     .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
     .card-category { font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; background: rgba(150, 150, 150, 0.15); border: 1px solid var(--card-border); color: var(--text-main); }
-    .fav-btn { background: none; border: none; font-size: 1.3rem; cursor: pointer; opacity: 0.3; filter: grayscale(100%); transition: all 0.2s; outline: none; }
+    .fav-btn { background: none; border: none; font-size: 1.3rem; cursor: pointer; opacity: 0.3; filter: grayscale(100%); transition: all 0.2s; }
     .fav-btn.active { opacity: 1; filter: grayscale(0%); transform: scale(1.15); }
 
     .card-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 4px; color: var(--text-main); line-height: 1.3; }
     .card-kana { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px; }
     .card-address { font-size: 0.85rem; color: var(--text-main); margin-bottom: 15px; }
 
-    /* アクションボタン */
     .card-actions { display: flex; gap: 6px; margin-top: auto; border-top: 1px solid var(--card-border); padding-top: 12px; }
     .action-btn {
       flex: 1; background: rgba(150, 150, 150, 0.1); border: 1px solid var(--card-border);
@@ -233,7 +239,32 @@
     }
     .action-btn:hover { background: var(--accent-grad); color: #fff; }
 
-    /* QRモーダル */
+    /* 初期表示プレースホルダーカード */
+    .empty-prompt {
+      grid-column: 1 / -1; text-align: center; padding: 60px 20px;
+      background: var(--card-bg); border: 2px dashed var(--card-border); border-radius: 24px;
+    }
+
+    /* 🎨 好きな色診断モーダル */
+    .diag-modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(15px); display: flex; justify-content: center; align-items: center; z-index: 500;
+      opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+    }
+    .diag-modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .diag-card {
+      background: var(--modal-bg); border: 1px solid var(--card-hover-border); border-radius: 30px;
+      padding: 35px 25px; width: 90%; max-width: 480px; text-align: center; box-shadow: 0 0 50px var(--accent-glow); color: var(--text-main);
+    }
+    .diag-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .diag-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+    .diag-opt-btn {
+      background: rgba(150, 150, 150, 0.1); border: 1px solid var(--card-border); border-radius: 16px;
+      padding: 16px 10px; color: var(--text-main); font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s;
+    }
+    .diag-opt-btn:hover { background: var(--accent-grad); color: #fff; transform: translateY(-3px); }
+
+    /* 通用モーダル / トースト */
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.75);
       backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 100;
@@ -242,15 +273,12 @@
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
     .modal-content {
       background: var(--modal-bg); border: 1px solid var(--card-hover-border); border-radius: 28px;
-      padding: 30px; width: 90%; max-width: 380px; text-align: center; box-shadow: 0 0 50px var(--accent-glow); color: var(--text-main);
+      padding: 30px; width: 90%; max-width: 380px; text-align: center; color: var(--text-main);
     }
-    .modal-close { background: rgba(150, 150, 150, 0.2); border: none; color: var(--text-main); padding: 10px 24px; border-radius: 20px; cursor: pointer; margin-top: 20px; }
-
-    /* トースト */
     .toast {
       position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
       background: #10b981; color: #fff; padding: 12px 24px; border-radius: 30px; font-weight: 600;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.3); opacity: 0; transition: all 0.3s ease; z-index: 200;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3); opacity: 0; transition: all 0.3s ease; z-index: 600;
     }
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
   </style>
@@ -264,11 +292,10 @@
   </div>
 
   <div class="container">
-    <!-- ☀️/🌙 ダーク＆ライト切替 / 10色パレット / 🌈 カラフルモード -->
     <div class="top-controls">
-      <button class="base-theme-toggle" id="base-theme-btn" onclick="toggleBaseTheme()">☀️ ライトモード</button>
+      <button class="base-theme-toggle" id="base-theme-btn" onclick="toggleBaseTheme()">☀️ ライト</button>
+      <button class="diag-reopen-btn" onclick="startColorDiag()">🎨 色診断</button>
       
-      <!-- 10色カラーパレット -->
       <div class="color-palette">
         <div class="color-dot active" style="background:#a855f7" title="Aurora" onclick="setColorTheme('aurora', this)"></div>
         <div class="color-dot" style="background:#ff0055" title="Cyberpunk" onclick="setColorTheme('cyberpunk', this)"></div>
@@ -282,7 +309,7 @@
         <div class="color-dot" style="background:#e11d48" title="Crimson" onclick="setColorTheme('crimson', this)"></div>
       </div>
 
-      <button class="colorful-toggle" id="colorful-btn" onclick="toggleColorfulMode()">🌈 キラキラモード</button>
+      <button class="colorful-toggle" id="colorful-btn" onclick="toggleColorfulMode()">💥 超キラキラ</button>
     </div>
 
     <header>
@@ -290,38 +317,58 @@
       <h1>取扱店舗ガイド</h1>
     </header>
 
-    <!-- ❤️ お気に入りフィルター -->
+    <!-- 検索パネル -->
+    <div class="search-panel">
+      <div class="input-group">
+        <label for="category-select">1. Category (カテゴリー選択)</label>
+        <select id="category-select">
+          <option value="">-- カテゴリーを選択してください --</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="keyword">2. Search Keyword (フリーワード)</label>
+        <input type="text" id="keyword" placeholder="店舗名・フリガナ・住所...">
+      </div>
+    </div>
+
+    <!-- ❤️ お気に入り ＆ タグ -->
     <div class="action-bar">
       <button class="btn-fav-filter" id="fav-filter-btn">❤️ お気に入り店舗のみ表示</button>
     </div>
 
-    <!-- 🏷️ エリア・人気タグチップ -->
     <div class="quick-tags">
       <span class="tag-chip" onclick="applyTag('イオンモール')">📍 イオンモール</span>
       <span class="tag-chip" onclick="applyTag('園町')">📍 園町</span>
       <span class="tag-chip" onclick="applyTag('スーパー')">🛒 スーパー</span>
-      <span class="tag-chip" onclick="applyTag('')">🔄 リセット</span>
-    </div>
-
-    <!-- 検索パネル -->
-    <div class="search-panel">
-      <div class="input-group">
-        <label for="keyword">Search Keyword</label>
-        <input type="text" id="keyword" placeholder="店舗名・フリガナ・住所...">
-      </div>
-      <div class="input-group">
-        <label for="category-select">Category</label>
-        <select id="category-select">
-          <option value="">すべてのカテゴリー</option>
-        </select>
-      </div>
+      <span class="tag-chip" onclick="resetSearch()">🔄 リセット</span>
     </div>
 
     <div class="status-bar">
-      <div class="result-count" id="result-count">読み込み中...</div>
+      <div class="result-count" id="result-count">カテゴリーまたはキーワードを選択してください</div>
     </div>
 
     <div class="store-grid" id="store-grid"></div>
+  </div>
+
+  <!-- 🎨 好きな色診断モーダル -->
+  <div class="diag-modal-overlay" id="diag-modal">
+    <div class="diag-card">
+      <div id="diag-step-1">
+        <h2 class="diag-title">🎨 直感カラー診断</h2>
+        <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:15px;">今の気分に一番近いものを選んでください！</p>
+        <div class="diag-options">
+          <button class="diag-opt-btn" onclick="finishDiag('cyberpunk')">⚡️ エネルギッシュに刺激が欲しい</button>
+          <button class="diag-opt-btn" onclick="finishDiag('emerald')">🌿 静かに穏やかに癒やされたい</button>
+          <button class="diag-opt-btn" onclick="finishDiag('aurora')">🌌 クリエイティブに考えたい</button>
+          <button class="diag-opt-btn" onclick="finishDiag('sunset')">🔥 情熱的にテンションを上げたい</button>
+        </div>
+      </div>
+      <div id="diag-step-result" style="display:none;">
+        <h2 class="diag-title" id="diag-res-title">おすすめテーマ</h2>
+        <p id="diag-res-desc" style="margin: 15px 0; font-size:1rem;"></p>
+        <button class="btn-fav-filter" style="background:var(--accent-grad); color:#fff;" onclick="closeDiagModal()">この色で店舗を探す！</button>
+      </div>
+    </div>
   </div>
 
   <!-- 📱 QRコード表示モーダル -->
@@ -329,12 +376,10 @@
     <div class="modal-content">
       <h3 id="qr-title" style="margin-bottom:15px; font-size:1.1rem;">店舗QRコード</h3>
       <div id="qr-code-container" style="margin: 15px 0;"></div>
-      <p style="font-size:0.8rem; color:var(--text-muted);">スマホのカメラでスキャンしてマップを開けます</p>
-      <button class="modal-close" onclick="closeQrModal()">閉じる</button>
+      <button class="btn-fav-filter" onclick="closeQrModal()">閉じる</button>
     </div>
   </div>
 
-  <!-- 📋 コピー通知トースト -->
   <div class="toast" id="toast">コピーしました！</div>
 
   <script>
@@ -342,7 +387,12 @@
     let favoriteStores = JSON.parse(localStorage.getItem('fav_stores') || '[]');
     let showFavoritesOnly = false;
 
-    // データ読み込み
+    const themeNames = {
+      aurora: '🌌 Aurora（宇宙）', cyberpunk: '🌆 Cyberpunk（ネオン）', emerald: '🌿 Emerald（自然）',
+      sunset: '🌅 Sunset（夕暮れ）', ocean: '🌊 Ocean（深海）', sakura: '🌸 Sakura（桜）',
+      amber: '琥珀 Amber（琥珀）', lavender: '💜 Lavender（ラベンダー）', mint: '🍃 Mint（ミント）', crimson: '🌹 Crimson（深紅）'
+    };
+
     async function loadStores() {
       try {
         const response = await fetch('data.json');
@@ -350,13 +400,15 @@
         storesData = await response.json();
         
         initCategoryFilter(storesData);
+        // 重さ対策：初期表示では全件描画を行わない
         renderStores();
+        // 初回のみ色診断を開始
+        startColorDiag();
       } catch (error) {
         document.getElementById('result-count').textContent = 'データの読み込みに失敗しました。';
       }
     }
 
-    // カテゴリ数字ソート
     function initCategoryFilter(data) {
       const categorySelect = document.getElementById('category-select');
       const categories = [...new Set(data.map(item => item.category))];
@@ -374,12 +426,24 @@
       });
     }
 
-    // 店舗一覧の描画
+    // 店舗一覧描画（選択・入力がない場合は全件描画を防止して軽量化）
     function renderStores() {
       const gridContainer = document.getElementById('store-grid');
       const countContainer = document.getElementById('result-count');
       const keyword = document.getElementById('keyword').value.toLowerCase().trim();
       const selectedCategory = document.getElementById('category-select').value;
+
+      // 💡 重さ対策：未選択時は全件描画せず案内を表示
+      if (!selectedCategory && !keyword && !showFavoritesOnly) {
+        gridContainer.innerHTML = `
+          <div class="empty-prompt">
+            <p style="font-size:1.2rem; font-weight:700; margin-bottom:8px;">🔍 店舗を検索してください</p>
+            <p style="font-size:0.85rem; color:var(--text-muted);">上の「カテゴリーを選択」または「キーワード入力」から店舗を表示できます。</p>
+          </div>
+        `;
+        countContainer.innerHTML = 'カテゴリーまたは検索キーワードを指定してください';
+        return;
+      }
 
       const filtered = storesData.filter(store => {
         const matchesCategory = !selectedCategory || store.category === selectedCategory;
@@ -404,15 +468,13 @@
         const isFav = favoriteStores.includes(store.name);
         const card = document.createElement('div');
         card.className = 'store-card';
-        card.style.animationDelay = `${Math.min(index * 0.04, 0.3)}s`;
+        card.style.animationDelay = `${Math.min(index * 0.03, 0.2)}s`;
 
-        // 📍 Googleマップ連携URL
         const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(store.name + ' ' + store.address)}`;
 
         card.innerHTML = `
           <div class="card-top">
             <span class="card-category">${escapeHtml(store.category)}</span>
-            <!-- ❤️ お気に入りボタン -->
             <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${escapeHtml(store.name)}')">❤️</button>
           </div>
           <h2 class="card-title">${escapeHtml(store.name)}</h2>
@@ -420,11 +482,8 @@
           <div class="card-address">📍 ${escapeHtml(store.address)}</div>
           
           <div class="card-actions">
-            <!-- 📍 マップ連携 -->
             <a href="${mapUrl}" target="_blank" class="action-btn">🗺️ Map</a>
-            <!-- 📱 QRコード -->
             <button class="action-btn" onclick="openQrModal('${escapeHtml(store.name)}', '${mapUrl}')">📱 QR</button>
-            <!-- 📋 1タップコピー -->
             <button class="action-btn" onclick="copyStoreInfo('${escapeHtml(store.name)}', '${escapeHtml(store.address)}')">📋 コピー</button>
           </div>
         `;
@@ -432,32 +491,43 @@
       });
     }
 
-    // ☀️/🌙 ダーク・ライト切り替え
-    function toggleBaseTheme() {
-      const html = document.documentElement;
-      const btn = document.getElementById('base-theme-btn');
-      const current = html.getAttribute('data-base-theme');
-      
-      if (current === 'dark') {
-        html.setAttribute('data-base-theme', 'light');
-        btn.textContent = '🌙 ダークモード';
-        showToast('ライトモードに切り替えました');
-      } else {
-        html.setAttribute('data-base-theme', 'dark');
-        btn.textContent = '☀️ ライトモード';
-        showToast('ダークモードに切り替えました');
-      }
+    /* 🎨 好きな色診断ロジック */
+    function startColorDiag() {
+      document.getElementById('diag-step-1').style.display = 'block';
+      document.getElementById('diag-step-result').style.display = 'none';
+      document.getElementById('diag-modal').classList.add('active');
     }
 
-    // 🎨 10色のカラーテーマ適用
-    function setColorTheme(themeName, element) {
+    function finishDiag(recommendedTheme) {
+      document.getElementById('diag-step-1').style.display = 'none';
+      const resContainer = document.getElementById('diag-step-result');
+      resContainer.style.display = 'block';
+
+      // テーマ適用
+      applyThemeByName(recommendedTheme);
+
+      document.getElementById('diag-res-title').textContent = `提案テーマ: ${themeNames[recommendedTheme]}`;
+      document.getElementById('diag-res-desc').textContent = `あなたの気分に合わせたテーマカラーを画面全体に適用しました！`;
+    }
+
+    function closeDiagModal() {
+      document.getElementById('diag-modal').classList.remove('active');
+    }
+
+    function applyThemeByName(themeName) {
       document.documentElement.setAttribute('data-color-theme', themeName);
-      document.querySelectorAll('.color-dot').forEach(dot => dot.classList.remove('active'));
-      element.classList.add('active');
-      showToast(`カラーテーマ: [${themeName.toUpperCase()}]`);
+      const dots = document.querySelectorAll('.color-dot');
+      dots.forEach(dot => {
+        dot.classList.toggle('active', dot.getAttribute('title').toLowerCase() === themeName);
+      });
     }
 
-    // 🌈 カラフル（キラキラ全色変化）モード切替
+    function setColorTheme(themeName, element) {
+      applyThemeByName(themeName);
+      showToast(`テーマ: [${themeName.toUpperCase()}]`);
+    }
+
+    // 💥 超キラキラモード切り替え
     function toggleColorfulMode() {
       const html = document.documentElement;
       const btn = document.getElementById('colorful-btn');
@@ -470,11 +540,24 @@
       } else {
         html.setAttribute('data-colorful', 'true');
         btn.classList.add('active');
-        showToast('✨ 🌈 キラキラモード ON！');
+        showToast('💥 ✨ 超キラキラレインボーモード ON！');
       }
     }
 
-    // ❤️ お気に入り保存
+    function toggleBaseTheme() {
+      const html = document.documentElement;
+      const btn = document.getElementById('base-theme-btn');
+      const current = html.getAttribute('data-base-theme');
+      
+      if (current === 'dark') {
+        html.setAttribute('data-base-theme', 'light');
+        btn.textContent = '🌙 ダーク';
+      } else {
+        html.setAttribute('data-base-theme', 'dark');
+        btn.textContent = '☀️ ライト';
+      }
+    }
+
     function toggleFavorite(storeName) {
       if (favoriteStores.includes(storeName)) {
         favoriteStores = favoriteStores.filter(name => name !== storeName);
@@ -491,20 +574,25 @@
       renderStores();
     });
 
-    // 🏷️ クイックタグ
     function applyTag(tag) {
       document.getElementById('keyword').value = tag;
       renderStores();
     }
 
-    // 📋 1タップコピー
+    function resetSearch() {
+      document.getElementById('keyword').value = '';
+      document.getElementById('category-select').value = '';
+      showFavoritesOnly = false;
+      document.getElementById('fav-filter-btn').classList.remove('active');
+      renderStores();
+    }
+
     function copyStoreInfo(name, address) {
       navigator.clipboard.writeText(`${name}\n住所: ${address}`).then(() => {
         showToast('店名と住所をコピーしました！');
       });
     }
 
-    // 📱 QRコードモーダル
     function openQrModal(name, url) {
       document.getElementById('qr-title').textContent = name;
       const qrContainer = document.getElementById('qr-code-container');
@@ -517,7 +605,6 @@
       document.getElementById('qr-modal').classList.remove('active');
     }
 
-    // トースト通知
     function showToast(message) {
       const toast = document.getElementById('toast');
       toast.textContent = message;
